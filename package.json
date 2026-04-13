@@ -11,7 +11,10 @@
     "prompt-lab": "node prompt-lab.js",
     "compare": "node comparateur.js",
     "server": "node server.js",
-    "compare-model": "node compare-same-model.js"
+    "compare-model": "node compare-same-model.js",
+    "stress": "node stress-test.js",
+    "sensitivity": "node prompt-sensitivity.js",
+    "multi-lang": "node multi-langue.js"
   },
   "keywords": [],
   "author": "",
