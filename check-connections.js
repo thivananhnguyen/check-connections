@@ -119,6 +119,35 @@ async function checkProvider(provider) {
 }
 
 // ============================================================
+// Phase 4 : Affichage formaté
+// ============================================================
+function displayResults(results) {
+  console.log('\n🔍 Vérification des connexions API...\n');
+
+  let okCount = 0;
+
+  for (const r of results) {
+    const icon = r.status === 'OK' ? '✅' : '❌';
+    const name = r.provider.padEnd(16);
+    const latency = r.latency ? `${r.latency}ms` : '-';
+    const extra = r.error ? `  (${r.error})` : '';
+    const verboseResponse = r.response ? `  → "${r.response}"` : '';
+
+    console.log(`${icon} ${name} ${latency}${verboseResponse}${extra}`);
+
+    if (r.status === 'OK') okCount++;
+  }
+
+  console.log(`\n${okCount}/${results.length} connexions actives`);
+
+  if (okCount === results.length) {
+    console.log('Tout est vert. Vous êtes prêts pour la suite !');
+  } else {
+    console.log('⚠️  Certaines connexions ont échoué. Vérifiez vos clés API.');
+  }
+}
+
+// ============================================================
 // Main
 // ============================================================
 async function main() {
@@ -128,7 +157,7 @@ async function main() {
   ]);
 
   console.log("\n🔍 RÉSULTATS DU PING :");
-  console.log(results);
+  displayResults(results);
 }
 
 if (require.main === module) {
