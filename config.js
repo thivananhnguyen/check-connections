@@ -1,5 +1,9 @@
 require('dotenv').config();
 
+// ============================================================
+// Configuration partagée — providers, pricing, modèles
+// ============================================================
+
 const PROVIDERS = [
   {
     name: 'Mistral',
@@ -24,6 +28,28 @@ const PROVIDERS = [
   },
 ];
 
+const GROQ_CONFIG = {
+  name: 'Groq (Llama 3.3 70B)',
+  url: 'https://api.groq.com/openai/v1/chat/completions',
+  key: process.env.GROQ_API_KEY,
+  model: 'llama-3.3-70b-versatile',
+  format: 'openai',
+};
+
+const HF_CONFIG = {
+  name: 'HuggingFace (Llama 3.1 8B)',
+  url: 'https://router.huggingface.co/novita/v3/openai/chat/completions',
+  key: process.env.HF_API_KEY,
+  model: 'meta-llama/llama-3.1-8b-instruct',
+  format: 'openai',
+};
+
+const MISTRAL_CONFIG = {
+  name: 'Mistral (Small)',
+  url: 'https://api.mistral.ai/v1/chat/completions',
+  key: process.env.MISTRAL_API_KEY,
+  model: 'mistral-small-latest',
+};
 
 const PRICING = [
   { provider: 'Mistral Small', costPerMillionTokens: 0.20 },
@@ -86,4 +112,4 @@ async function callProvider(provider, prompt, options = {}) {
   }
 }
 
-module.exports = { PROVIDERS, PRICING, callProvider };
+module.exports = { PROVIDERS, GROQ_CONFIG, HF_CONFIG, MISTRAL_CONFIG, PRICING, callProvider };

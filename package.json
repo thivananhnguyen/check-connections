@@ -10,7 +10,8 @@
     "cost": "node cost-calculator.js",
     "prompt-lab": "node prompt-lab.js",
     "compare": "node comparateur.js",
-    "server": "node server.js"
+    "server": "node server.js",
+    "compare-model": "node compare-same-model.js"
   },
   "keywords": [],
   "author": "",
