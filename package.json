@@ -14,7 +14,8 @@
     "compare-model": "node compare-same-model.js",
     "stress": "node stress-test.js",
     "sensitivity": "node prompt-sensitivity.js",
-    "multi-lang": "node multi-langue.js"
+    "multi-lang": "node multi-langue.js",
+    "dashboard": "node dashboard.js"
   },
   "keywords": [],
   "author": "",

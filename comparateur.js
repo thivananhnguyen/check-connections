@@ -12,6 +12,31 @@ const PROMPTS = [
   { type: 'factuel', prompt: 'Qui a inventé le Transformer en 2017 ? Réponds en une phrase.' },
 ];
 
+async function compareProviders() {
+  const tasks = PROMPTS.flatMap((p) =>
+    PROVIDERS.map((prov) =>
+      callProvider(prov, p.prompt).then((r) => ({ ...r, type: p.type }))
+    )
+  );
+
+  const results = await Promise.all(tasks);
+
+  const providerNames = PROVIDERS.map((p) => p.name);
+
+  return PROMPTS.map((p) => {
+    const row = { type: p.type };
+    for (const name of providerNames) {
+      const r = results.find((res) => res.type === p.type && res.provider === name);
+      row[name] = r
+        ? r.error
+          ? { error: r.error }
+          : { content: r.content || '(vide)', latency: r.latency, tokens: r.tokens }
+        : { error: 'non disponible' };
+    }
+    return row;
+  });
+}
+
 async function main() {
   console.log('🏆 Comparateur de modèles\n');
 
@@ -48,6 +73,8 @@ async function main() {
   console.log('');
 }
 
-main().catch(console.error);
+if (require.main === module) {
+  main().catch(console.error);
+}
 
-module.exports = { PROMPTS };
+module.exports = { PROMPTS, compareProviders };

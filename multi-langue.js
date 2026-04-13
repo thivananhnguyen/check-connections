@@ -1,4 +1,4 @@
-const { MISTRAL_CONFIG } = require('./config');
+const { MISTRAL_CONFIG, MULTI_LANG_QUESTIONS } = require('./config');
 
 // ============================================================
 // Phase 13 : Multi-langue
@@ -7,12 +7,7 @@ const { MISTRAL_CONFIG } = require('./config');
 const PROVIDER = MISTRAL_CONFIG;
 const PRICING_INPUT_1M = 0.20;
 const PRICING_OUTPUT_1M = 0.60;
-
-const QUESTIONS = [
-  { langue: 'Français', prompt: 'Explique ce qu\'est le machine learning en 3 phrases.' },
-  { langue: 'English', prompt: 'Explain what machine learning is in 3 sentences.' },
-  { langue: 'Español', prompt: 'Explica qué es el machine learning en 3 frases.' },
-];
+const QUESTIONS = MULTI_LANG_QUESTIONS;
 
 async function callWithLanguage(question) {
   if (!PROVIDER.key) {
@@ -96,4 +91,8 @@ async function main() {
   console.log('💡 Colonne qualité : à remplir subjectivement.');
 }
 
-main().catch(console.error);
+if (require.main === module) {
+  main().catch(console.error);
+}
+
+module.exports = { QUESTIONS, callWithLanguage };

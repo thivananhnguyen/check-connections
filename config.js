@@ -57,6 +57,20 @@ const PRICING = [
   { provider: 'GPT-4o', costPerMillionTokens: 2.50 },
 ];
 
+const SENSITIVITY_VARIATIONS = [
+  'Explique le machine learning',
+  'Explique-moi le machine learning',
+  'Peux-tu m\'expliquer le machine learning ?',
+  'C\'est quoi le machine learning ?',
+  'Machine learning : définition et explication',
+];
+
+const MULTI_LANG_QUESTIONS = [
+  { langue: 'Français', prompt: 'Explique ce qu\'est le machine learning en 3 phrases.' },
+  { langue: 'English', prompt: 'Explain what machine learning is in 3 sentences.' },
+  { langue: 'Español', prompt: 'Explica qué es el machine learning en 3 frases.' },
+];
+
 // ============================================================
 // Fonction utilitaire partagée — appel API provider
 // ============================================================
@@ -112,4 +126,4 @@ async function callProvider(provider, prompt, options = {}) {
   }
 }
 
-module.exports = { PROVIDERS, GROQ_CONFIG, HF_CONFIG, MISTRAL_CONFIG, PRICING, callProvider };
+module.exports = { PROVIDERS, GROQ_CONFIG, HF_CONFIG, MISTRAL_CONFIG, PRICING, SENSITIVITY_VARIATIONS, MULTI_LANG_QUESTIONS, callProvider };

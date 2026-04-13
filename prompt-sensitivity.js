@@ -1,18 +1,11 @@
-const { MISTRAL_CONFIG } = require('./config');
+const { MISTRAL_CONFIG, SENSITIVITY_VARIATIONS } = require('./config');
 
 // ============================================================
 // Phase 12 : Sensibilité du prompt
 // ============================================================
 
 const PROVIDER = MISTRAL_CONFIG;
-
-const VARIATIONS = [
-  'Explique le machine learning',
-  'Explique-moi le machine learning',
-  'Peux-tu m\'expliquer le machine learning ?',
-  'C\'est quoi le machine learning ?',
-  'Machine learning : définition et explication',
-];
+const VARIATIONS = SENSITIVITY_VARIATIONS;
 
 async function callWithPrompt(prompt) {
   if (!PROVIDER.key) {
@@ -85,4 +78,8 @@ async function main() {
   console.log('\nObservation : la formulation impacte le ton et la longueur, pas le fond.');
 }
 
-main().catch(console.error);
+if (require.main === module) {
+  main().catch(console.error);
+}
+
+module.exports = { VARIATIONS, callWithPrompt };
