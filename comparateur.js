@@ -40,16 +40,7 @@ async function compareProviders() {
 async function main() {
   console.log('🏆 Comparateur de modèles\n');
 
-  // Toutes les combinaisons en parallèle
-  const tasks = PROMPTS.flatMap((p) =>
-    PROVIDERS.map((prov) =>
-      callProvider(prov, p.prompt).then((r) => ({ ...r, type: p.type }))
-    )
-  );
-
-  const results = await Promise.all(tasks);
-
-  // Construire le tableau markdown
+  const comparison = await compareProviders();
   const providerNames = PROVIDERS.map((p) => p.name);
 
   // Header
@@ -59,15 +50,14 @@ async function main() {
   console.log(header);
   console.log(separator);
 
-  for (const p of PROMPTS) {
+  for (const row of comparison) {
     const cells = providerNames.map((name) => {
-      const r = results.find((res) => res.type === p.type && res.provider === name);
-      if (!r) return '(non disponible)'.padEnd(45);
-      if (r.error) return `❌ ${r.error}`.padEnd(45);
-      return (r.content || '(vide)').substring(0, 42).padEnd(45);
+      const cell = row[name];
+      if (!cell || cell.error) return `❌ ${cell?.error || 'non disponible'}`.padEnd(45);
+      return (cell.content || '(vide)').substring(0, 42).padEnd(45);
     });
 
-    console.log(`| ${p.type.padEnd(10)} | ${cells.join(' | ')} |`);
+    console.log(`| ${row.type.padEnd(10)} | ${cells.join(' | ')} |`);
   }
 
   console.log('');
