@@ -4,30 +4,18 @@
   "description": "",
   "main": "check-connections.js",
   "scripts": {
+    "start": "node check-connections.js",
     "check": "node check-connections.js",
     "check:verbose": "node check-connections.js --verbose",
-    "cost": "node cost-calculator.js",
-    "prompt-lab": "node prompt-lab.js",
-    "compare": "node comparateur.js",
-    "server": "node server.js",
-    "compare-model": "node compare-same-model.js",
-    "stress": "node stress-test.js",
-    "sensitivity": "node prompt-sensitivity.js",
-    "multi-lang": "node multi-langue.js",
-    "dashboard": "node dashboard.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/thivananhnguyen/check-connections.git"
+    "cost": "node cost-calculator.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/thivananhnguyen/check-connections/issues"
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   },
-  "homepage": "https://github.com/thivananhnguyen/check-connections#readme",
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1"
