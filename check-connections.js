@@ -6,7 +6,8 @@ require('dotenv').config();
 const KEYS = [
   { name: 'MISTRAL_API_KEY', value: process.env.MISTRAL_API_KEY },
   { name: 'GROQ_API_KEY', value: process.env.GROQ_API_KEY },
-  { name: 'HF_API_KEY', value: process.env.HF_API_KEY }
+  { name: 'HF_API_KEY', value: process.env.HF_API_KEY },
+  { name: 'PINECONE_API_KEY', value: process.env.PINECONE_API_KEY },
 ];
 
 function checkKeys() {
@@ -148,20 +149,82 @@ function displayResults(results) {
 }
 
 // ============================================================
+// Phase 5 :  Pinecone + modèles disponibles 
+// ============================================================
+async function checkPinecone() {
+  const key = process.env.PINECONE_API_KEY;
+  if (!key) {
+    return { provider: 'Pinecone', status: 'ERROR', latency: 0, error: 'Clé API manquante' };
+  }
+
+  const start = Date.now();
+  try {
+    const res = await fetch('https://api.pinecone.io/indexes', {
+      method: 'GET',
+      headers: {
+        'Api-Key': key,
+        'X-Pinecone-API-Version': '2024-07',
+      },
+    });
+    const latency = Date.now() - start;
+
+    if (!res.ok) {
+      return { provider: 'Pinecone', status: 'ERROR', latency, error: `HTTP ${res.status}` };
+    }
+
+    return { provider: 'Pinecone', status: 'OK', latency };
+  } catch (err) {
+    return { provider: 'Pinecone', status: 'ERROR', latency: Date.now() - start, error: err.message };
+  }
+}
+
+async function listMistralModels() {
+  const key = process.env.MISTRAL_API_KEY;
+  if (!key) {
+    console.log('❌ Impossible de lister les modèles Mistral : clé manquante');
+    return;
+  }
+
+  try {
+    const res = await fetch('https://api.mistral.ai/v1/models', {
+      headers: { Authorization: `Bearer ${key}` },
+    });
+
+    if (!res.ok) {
+      console.log(`❌ Erreur lors de la récupération des modèles Mistral: HTTP ${res.status}`);
+      return;
+    }
+
+    const data = await res.json();
+    console.log('\n Modèles Mistral disponibles :');
+    for (const m of (data.data || []).slice(0, 5)) {
+    console.log(`   - ${m.id}`);
+    }
+  } catch (err) {
+    console.log(`❌ Erreur réseau pour les modèles Mistral: ${err.message}`);
+  }
+}
+
+// ============================================================
 // Main
 // ============================================================
 async function main() {
   checkKeys();
   const results = await Promise.all([
     ...PROVIDERS.map((p) => checkProvider(p)),
+    checkPinecone(),
   ]);
 
-  console.log("\n🔍 RÉSULTATS DU PING :");
   displayResults(results);
+
+  if (isVerbose) {
+    await listMistralModels();
+  }
 }
 
 if (require.main === module) {
   main().catch(console.error);
 }
 
-module.exports = { PROVIDERS, checkProvider };
+// Exports pour réutilisation dans server.js et autres
+module.exports = { PROVIDERS, checkProvider, checkPinecone, displayResults, listMistralModels };
