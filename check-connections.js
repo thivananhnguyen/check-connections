@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { PROVIDERS } = require('./config');
 
 // ============================================================
@@ -99,7 +98,7 @@ async function checkProvider(provider) {
 // ============================================================
 // Phase 4 : Affichage formaté
 // ============================================================
-function displayResults(results) {
+function displayResult(results) {
   console.log('\n🔍 Vérification des connexions API...\n');
 
   let okCount = 0;
@@ -126,7 +125,7 @@ function displayResults(results) {
 }
 
 // ============================================================
-// Phase 5 :  Pinecone + modèles disponibles 
+//  Phase 5 :  Pinecone + modèles disponibles Mistral
 // ============================================================
 async function checkPinecone() {
   const key = process.env.PINECONE_API_KEY;
@@ -192,7 +191,7 @@ async function main() {
     checkPinecone(),
   ]);
 
-  displayResults(results);
+  displayResult(results);
 
   if (isVerbose) {
     await listMistralModels();
@@ -203,5 +202,4 @@ if (require.main === module) {
   main().catch(console.error);
 }
 
-// Exports pour réutilisation dans server.js et autres
-module.exports = { PROVIDERS, checkProvider, checkPinecone, displayResults, listMistralModels };
+module.exports = { checkProvider, checkPinecone, displayResult, listMistralModels };

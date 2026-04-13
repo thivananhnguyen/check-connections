@@ -24,4 +24,11 @@ const PROVIDERS = [
   },
 ];
 
-module.exports = { PROVIDERS };
+
+const PRICING = [
+  { provider: 'Mistral Small', costPerMillionTokens: 0.20 },
+  { provider: 'Groq Llama 3', costPerMillionTokens: 0.05 },
+  { provider: 'GPT-4o', costPerMillionTokens: 2.50 },
+];
+
+module.exports = { PROVIDERS, PRICING };

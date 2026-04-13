@@ -1,19 +1,22 @@
-require('dotenv').config();
+const { PRICING } = require('./config');
 
 // ============================================================
 // Phase 6 : Cost Calculator
 // ============================================================
 
-const PRICING = [
-  { provider: 'Mistral Small', costPerMillionTokens: 0.20 },
-  { provider: 'Groq Llama 3', costPerMillionTokens: 0.05 },
-  { provider: 'GPT-4o', costPerMillionTokens: 2.50 },
-];
-
 function estimateTokens(text) {
   return Math.ceil(text.length / 4);
 }
 
+function estimateCostData(text) {
+  const tokens = estimateTokens(text);
+  return PRICING.map((p) => ({
+    provider: p.provider,
+    tokens,
+    costPerRequest: (tokens / 1_000_000) * p.costPerMillionTokens,
+    costPer1000: (tokens / 1_000_000) * p.costPerMillionTokens * 1000,
+  }));
+}
 
 function estimateCost(text, label) {
   const tokens = estimateTokens(text);
@@ -37,4 +40,4 @@ if (require.main === module) {
   estimateCost(text);
 }
 
-module.exports = { estimateTokens, estimateCost, PRICING };
+module.exports = { estimateTokens, estimateCost, estimateCostData, PRICING };

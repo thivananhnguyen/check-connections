@@ -1,22 +1,20 @@
-require('dotenv').config();
 const { PROVIDERS } = require('./config');
 
 // ============================================================
 // Phase 8 : Comparateur de modèles
 // ============================================================
+
 const PROMPTS = [
-  { type: 'traduction', temp: 0.3, prompt: 'Traduis en anglais : "Le chat dort sur le canapé."' },
-  { type: 'résumé',     temp: 0.3, prompt: 'Résume un paragraphe en une phrase' },
-  { type: 'code',       temp: 0.0, prompt: 'Écris une fonction JavaScript qui inverse une chaîne. Code uniquement.' },
-  { type: 'créatif',    temp: 0.9, prompt: 'Donne une métaphore originale pour un LLM.' },
-  { type: 'factuel',    temp: 0.0, prompt: 'Qui a inventé le Transformer en 2017 ?' },
+  { type: 'traduction', prompt: 'Traduis en anglais : "Le chat dort sur le canapé."' },
+  { type: 'résumé', prompt: 'Résume en une phrase : "L\'intelligence artificielle est un domaine de l\'informatique qui vise à créer des systèmes capables de simuler l\'intelligence humaine. Elle englobe le machine learning, le deep learning, le traitement du langage naturel et la vision par ordinateur. Ces technologies sont utilisées dans de nombreux secteurs comme la santé, la finance, les transports et le divertissement."' },
+  { type: 'code', prompt: 'Écris une fonction JavaScript qui inverse une chaîne de caractères. Donne uniquement le code.' },
+  { type: 'créatif', prompt: 'Donne une métaphore originale pour expliquer ce qu\'est un LLM (Large Language Model).' },
+  { type: 'factuel', prompt: 'Qui a inventé le Transformer en 2017 ? Réponds en une phrase.' },
 ];
 
-async function callProvider(provider, prompt, temp) { 
+async function callProvider(provider, prompt) {
   let headers = { 'Content-Type': 'application/json' };
   let body;
-
-  const safeTemp = (provider.name === 'HuggingFace' && temp === 0) ? 0.01 : temp;
 
   if (provider.format === 'openai') {
     headers['Authorization'] = `Bearer ${provider.key}`;
@@ -24,13 +22,13 @@ async function callProvider(provider, prompt, temp) {
       model: provider.model,
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 200,
-      temperature: safeTemp, 
+      temperature: 0.3,
     });
   } else {
     headers['Authorization'] = `Bearer ${provider.key}`;
     body = JSON.stringify({
       inputs: prompt,
-      parameters: { max_new_tokens: 200, temperature: safeTemp },
+      parameters: { max_new_tokens: 200, temperature: 0.3 },
     });
   }
 
@@ -68,7 +66,7 @@ async function main() {
   // Toutes les combinaisons en parallèle
   const tasks = PROMPTS.flatMap((p) =>
     PROVIDERS.map((prov) =>
-      callProvider(prov, p.prompt, p.temp).then((r) => ({ ...r, type: p.type }))
+      callProvider(prov, p.prompt).then((r) => ({ ...r, type: p.type }))
     )
   );
 
