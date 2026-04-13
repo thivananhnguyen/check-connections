@@ -8,7 +8,8 @@
     "check": "node check-connections.js",
     "check:verbose": "node check-connections.js --verbose",
     "cost": "node cost-calculator.js",
-    "prompt-lab": "node prompt-lab.js"
+    "prompt-lab": "node prompt-lab.js",
+    "compare": "node comparateur.js"
   },
   "keywords": [],
   "author": "",
